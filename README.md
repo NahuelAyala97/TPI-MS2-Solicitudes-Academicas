@@ -38,8 +38,6 @@ No requiere una base de datos ni configuraciones adicionales.
 ## Organización
 
 - src/main/java: código fuente del sistema.
-- docs: documentación del análisis y las mejoras.
-- docs/evidencias: capturas de funcionamiento.
 
 ## Versiones
 

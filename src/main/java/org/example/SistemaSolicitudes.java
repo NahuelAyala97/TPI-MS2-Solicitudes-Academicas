@@ -7,50 +7,52 @@ public class SistemaSolicitudes {
     public ArrayList<Solicitud> solicitudes = new ArrayList<>();
 
     // Registrar una nueva solicitud
-    public void registrarSolicitud(int id, Estudiante estudiante,
-                                   String descripcion, String tipo,
-                                   String prioridad, String estado) {
+    public void registrarSolicitud(Solicitud nuevaSolicitud) {
 
-        for (Solicitud s : solicitudes) {
-            if (s.id == id) {
+        if (nuevaSolicitud == null) {
+            System.out.println("Los datos de la solicitud son incorrectos.");
+            return;
+        }
+
+        for (Solicitud solicitud : solicitudes) {
+            if (solicitud.getId() == nuevaSolicitud.getId()) {
                 System.out.println("Ya existe una solicitud con ese ID.");
                 return;
             }
         }
 
-        if (estudiante == null || descripcion == null || descripcion.isBlank()) {
+        if (nuevaSolicitud.getEstudiante() == null ||
+                nuevaSolicitud.getDescripcion() == null ||
+                nuevaSolicitud.getDescripcion().isBlank()) {
             System.out.println("Los datos de la solicitud son incorrectos.");
             return;
         }
 
-        if (!estado.equals("Pendiente") &&
-                !estado.equals("En proceso") &&
-                !estado.equals("Resuelta")) {
+        if (!esEstadoValido(nuevaSolicitud.getEstado())) {
             System.out.println("Estado no válido.");
             return;
         }
 
-        Solicitud s = new Solicitud(id, estudiante, descripcion,
-                tipo, prioridad, estado);
-
-        solicitudes.add(s);
+        solicitudes.add(nuevaSolicitud);
         System.out.println("Solicitud registrada correctamente.");
     }
 
+
     // Cambiar el estado de una solicitud
+
     public void cambiarEstado(int id, String nuevoEstado) {
 
-        for (Solicitud s : solicitudes) {
-            if (s.id == id) {
+        for (Solicitud solicitud : solicitudes) {
+            if (solicitud.getId() == id) {
 
-                if (!nuevoEstado.equals("Pendiente") &&
-                        !nuevoEstado.equals("En proceso") &&
-                        !nuevoEstado.equals("Resuelta")) {
+                EstadoSolicitud estado = EstadoSolicitud.desdeTexto(nuevoEstado);
+
+                if (!esEstadoValido(estado)) {
                     System.out.println("Estado no válido.");
                     return;
                 }
 
-                s.estado = nuevoEstado;
+                solicitud.setEstado(estado);
                 System.out.println("Estado actualizado correctamente.");
                 return;
             }
@@ -59,12 +61,13 @@ public class SistemaSolicitudes {
         System.out.println("Solicitud no encontrada.");
     }
 
+
     // Asignar un responsable
     public void asignarResponsable(int id, Responsable responsable) {
 
         for (Solicitud s : solicitudes) {
-            if (s.id == id) {
-                s.responsable = responsable;
+            if (s.getId() == id) {
+                s.setResponsable(responsable);
                 System.out.println("Responsable asignado correctamente.");
                 return;
             }
@@ -74,26 +77,18 @@ public class SistemaSolicitudes {
     }
 
     // Buscar solicitudes por tipo
+
     public void buscarPorTipo(String tipo) {
 
         boolean encontrado = false;
+        ReporteSolicitudes reporte = new ReporteSolicitudes();
 
         System.out.println("Solicitudes de tipo: " + tipo);
 
-        for (Solicitud s : solicitudes) {
-            if (s.tipo.equalsIgnoreCase(tipo)) {
+        for (Solicitud solicitud : solicitudes) {
+            if (solicitud.getTipo().equalsIgnoreCase(tipo)) {
 
-                System.out.println("ID: " + s.id);
-                System.out.println("Estudiante: " + s.estudiante.nombre);
-                System.out.println("Descripción: " + s.descripcion);
-                System.out.println("Prioridad: " + s.prioridad);
-                System.out.println("Estado: " + s.estado);
-
-                if (s.responsable != null) {
-                    System.out.println("Responsable: " + s.responsable.nombre);
-                }
-
-                System.out.println("--------------------");
+                reporte.mostrarSolicitudBusqueda(solicitud);
                 encontrado = true;
             }
         }
@@ -103,46 +98,16 @@ public class SistemaSolicitudes {
         }
     }
 
+
     // Generar reporte de solicitudes
     public void generarReporte() {
+        ReporteSolicitudes reporte = new ReporteSolicitudes();
+        reporte.generarReporte(solicitudes);
+    }
 
-        int pendientes = 0;
-        int enProceso = 0;
-        int resueltas = 0;
 
-        System.out.println("REPORTE DE SOLICITUDES");
-        System.out.println("--------------------");
-
-        for (Solicitud s : solicitudes) {
-
-            System.out.println("ID: " + s.id);
-            System.out.println("Estudiante: " + s.estudiante.nombre);
-            System.out.println("Tipo: " + s.tipo);
-            System.out.println("Descripción: " + s.descripcion);
-            System.out.println("Prioridad: " + s.prioridad);
-            System.out.println("Estado: " + s.estado);
-
-            if (s.responsable != null) {
-                System.out.println("Responsable: " + s.responsable.nombre);
-            } else {
-                System.out.println("Responsable: Sin asignar");
-            }
-
-            System.out.println("--------------------");
-
-            if (s.estado.equals("Pendiente")) {
-                pendientes++;
-            } else if (s.estado.equals("En proceso")) {
-                enProceso++;
-            } else if (s.estado.equals("Resuelta")) {
-                resueltas++;
-            }
-        }
-
-        System.out.println("Total de solicitudes: " + solicitudes.size());
-        System.out.println("Pendientes: " + pendientes);
-        System.out.println("En proceso: " + enProceso);
-        System.out.println("Resueltas: " + resueltas);
+    private boolean esEstadoValido(EstadoSolicitud estado) {
+        return estado != null;
     }
 }
 

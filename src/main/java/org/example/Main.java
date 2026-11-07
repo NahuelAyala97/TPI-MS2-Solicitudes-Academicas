@@ -17,18 +17,23 @@ public class Main {
         // Registrar solicitudes
         System.out.println("REGISTRO DE SOLICITUDES");
 
-        sistema.registrarSolicitud(1, e1,
+        sistema.registrarSolicitud(new Solicitud(1, e1,
                 "Solicitar certificado de alumno regular",
-                "Certificado", "Alta", "Pendiente");
+                "Certificado",
+                PrioridadSolicitud.ALTA,
+                EstadoSolicitud.PENDIENTE));
 
-        sistema.registrarSolicitud(2, e2,
+        sistema.registrarSolicitud(new Solicitud(2, e2,
                 "Consultar equivalencias",
-                "Consulta", "Media", "Pendiente");
+                "Consulta",
+                PrioridadSolicitud.MEDIA,
+                EstadoSolicitud.PENDIENTE));
 
-        sistema.registrarSolicitud(3, e1,
+        sistema.registrarSolicitud(new Solicitud(3, e1,
                 "Solicitar certificado analitico",
-                "Certificado", "Baja", "Pendiente");
-
+                "Certificado",
+                PrioridadSolicitud.BAJA,
+                EstadoSolicitud.PENDIENTE));
         // Cambiar estados
         System.out.println("\nCAMBIO DE ESTADOS");
 
@@ -56,8 +61,11 @@ public class Main {
 
         sistema.cambiarEstado(99, "Resuelta");
         sistema.cambiarEstado(1, "Cancelada");
-        sistema.registrarSolicitud(1, e1,
+
+        sistema.registrarSolicitud(new Solicitud(1, e1,
                 "Solicitud repetida",
-                "Consulta", "Alta", "Pendiente");
+                "Consulta",
+                PrioridadSolicitud.ALTA,
+                EstadoSolicitud.PENDIENTE));
     }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SistemaSolicitudes {
 
-    public ArrayList<Solicitud> solicitudes = new ArrayList<>();
+    private ArrayList<Solicitud> solicitudes = new ArrayList<>();
 
     // Registrar una nueva solicitud
     public void registrarSolicitud(Solicitud nuevaSolicitud) {
@@ -23,7 +23,10 @@ public class SistemaSolicitudes {
 
         if (nuevaSolicitud.getEstudiante() == null ||
                 nuevaSolicitud.getDescripcion() == null ||
-                nuevaSolicitud.getDescripcion().isBlank()) {
+                nuevaSolicitud.getDescripcion().isBlank() ||
+                nuevaSolicitud.getTipo() == null ||
+                nuevaSolicitud.getTipo().isBlank() ||
+                nuevaSolicitud.getPrioridad() == null) {
             System.out.println("Los datos de la solicitud son incorrectos.");
             return;
         }
@@ -65,9 +68,14 @@ public class SistemaSolicitudes {
     // Asignar un responsable
     public void asignarResponsable(int id, Responsable responsable) {
 
-        for (Solicitud s : solicitudes) {
-            if (s.getId() == id) {
-                s.setResponsable(responsable);
+        if (responsable == null) {
+            System.out.println("El responsable no es válido.");
+            return;
+        }
+
+        for (Solicitud solicitud : solicitudes) {
+            if (solicitud.getId() == id) {
+                solicitud.setResponsable(responsable);
                 System.out.println("Responsable asignado correctamente.");
                 return;
             }

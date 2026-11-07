@@ -47,6 +47,10 @@ public class Solicitud {
     }
 
     public void setEstado(EstadoSolicitud estado) {
+        if (estado == null) {
+            throw new IllegalArgumentException("Estado no válido.");
+        }
+
         this.estado = estado;
     }
 
